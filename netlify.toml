@@ -1,0 +1,91 @@
+[build]
+  command = "npx vite build"
+  publish = "dist"
+
+# Redirect root logo placeholder to new logo
+[[redirects]]
+  from = "/input_file_0.png"
+  to = "/images/124.png"
+  status = 302
+
+# Redirect individual sport/facility placeholders to high-res fallbacks
+[[redirects]]
+  from = "/input_file_1.png"
+  to = "https://images.unsplash.com/photo-1555597673-b21d5c935865?auto=format&fit=crop&w=1200&q=80"
+  status = 302
+
+[[redirects]]
+  from = "/input_file_2.png"
+  to = "https://images.unsplash.com/photo-1593111774240-d529f12cf4bb?auto=format&fit=crop&w=1200&q=80"
+  status = 302
+
+[[redirects]]
+  from = "/input_file_3.png"
+  to = "/images/128.jpeg"
+  status = 302
+
+[[redirects]]
+  from = "/input_file_4.png"
+  to = "/images/125.jpeg"
+  status = 302
+
+[[redirects]]
+  from = "/input_file_5.png"
+  to = "https://images.unsplash.com/photo-1521587760476-6c12a4b040da?auto=format&fit=crop&w=1200&q=80"
+  status = 302
+
+[[redirects]]
+  from = "/input_file_6.png"
+  to = "https://images.unsplash.com/photo-1522202176988-66273c2fd55f?auto=format&fit=crop&w=1200&q=80"
+  status = 302
+
+[[redirects]]
+  from = "/input_file_7.png"
+  to = "https://images.unsplash.com/photo-1502082553048-f009c37129b9?auto=format&fit=crop&w=1200&q=80"
+  status = 302
+
+[[redirects]]
+  from = "/input_file_8.png"
+  to = "https://images.unsplash.com/photo-1506880018603-83d5b814b5a6?auto=format&fit=crop&w=1200&q=80"
+  status = 302
+
+[[redirects]]
+  from = "/input_file_9.png"
+  to = "https://images.unsplash.com/photo-1513364776144-60967b0f800f?auto=format&fit=crop&w=1200&q=80"
+  status = 302
+
+[[redirects]]
+  from = "/input_file_10.png"
+  to = "https://images.unsplash.com/photo-1416879595882-3373a0480b5b?auto=format&fit=crop&w=1200&q=80"
+  status = 302
+
+[[redirects]]
+  from = "/input_file_11.png"
+  to = "https://images.unsplash.com/photo-1513151233558-d860c5398176?auto=format&fit=crop&w=1200&q=80"
+  status = 302
+
+[[redirects]]
+  from = "/input_file_12.png"
+  to = "https://images.unsplash.com/photo-1516321318423-f06f85e504b3?auto=format&fit=crop&w=1200&q=80"
+  status = 302
+
+[[redirects]]
+  from = "/input_file_13.png"
+  to = "https://images.unsplash.com/photo-1532094349884-543bc11b234d?auto=format&fit=crop&w=1200&q=80"
+  status = 302
+
+[[redirects]]
+  from = "/input_file_14.png"
+  to = "https://images.unsplash.com/photo-1503899036084-c55cdd92da26?auto=format&fit=crop&w=1200&q=80"
+  status = 302
+
+[[redirects]]
+  from = "/input_file_15.png"
+  to = "https://images.unsplash.com/photo-1517245386807-bb43f82c33c4?auto=format&fit=crop&w=1200&q=80"
+  status = 302
+
+# Fallback SPA Router routing (crucial for deep links reloading)
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200

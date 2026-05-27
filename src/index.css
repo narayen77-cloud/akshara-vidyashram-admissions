@@ -1,0 +1,26 @@
+@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&display=swap');
+
+@import "tailwindcss";
+
+@theme {
+  --font-heading: 'Playfair Display', serif;
+  --font-sans: 'Outfit', sans-serif;
+  --color-gold-50: #fbf8f0;
+  --color-gold-100: #f6ecdb;
+  --color-gold-500: #d4af37;
+  --color-gold-600: #b89229;
+  --color-navy-50: #f0f4f8;
+  --color-navy-100: #d9e2ec;
+  --color-navy-800: #102a43;
+  --color-navy-900: #0c2340;
+  --color-navy-950: #051424;
+}
+
+@keyframes slideProgress {
+  0% { width: 0%; }
+  100% { width: 100%; }
+}
+
+.animate-slide-progress {
+  animation: slideProgress 5000ms linear forwards;
+}
