@@ -1,0 +1,626 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>TALENTRIA 26 – Open Talent Competition | Akshara Vidyaashram</title>
+  <meta name="description" content="TALENTRIA 26: Open Talent Competition at Akshara Vidyaashram for Grades 1–9. Saturday, 21 November 2026. Last date for registration: 4 November 2026." />
+  
+  <!-- Open Graph -->
+  <meta property="og:title" content="TALENTRIA 26 – Open Talent Competition | Akshara Vidyaashram" />
+  <meta property="og:description" content="It's your time to shine! Open to all the grades of Aksharites (Grades 1–9). Saturday, 21 November 2026." />
+  <meta property="og:image" content="./images/talentria-flyer.jpg" />
+  <meta property="og:type" content="website" />
+
+  <!-- Google Fonts: Playfair Display & Outfit -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&family=Playfair+Display:ital,wght@0,400;0,600;0,700;0,800;0,900;1,400&display=swap" rel="stylesheet" />
+
+  <!-- Tailwind CSS CDN for self-contained instant rendering -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            heading: ['"Playfair Display"', 'serif'],
+            sans: ['"Outfit"', 'sans-serif'],
+          },
+          colors: {
+            navy: {
+              800: '#102a43',
+              900: '#0c2340',
+              950: '#051424',
+            },
+            gold: {
+              400: '#e5c05d',
+              500: '#d4af37',
+              600: '#b89229',
+            }
+          }
+        }
+      }
+    }
+  </script>
+
+  <style>
+    body { font-family: 'Outfit', sans-serif; }
+    h1, h2, h3, .font-heading { font-family: 'Playfair Display', serif; }
+  </style>
+</head>
+<body class="min-h-screen bg-[#faf8f5] text-gray-900 selection:bg-[#fbd38d] selection:text-[#742a2a]">
+
+  <!-- HEADER -->
+  <header class="sticky top-0 z-40 bg-white/95 backdrop-blur-md border-b border-amber-100 shadow-xs">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="flex justify-between items-center h-20">
+        
+        <a href="/" title="Akshara Vidyaashram" class="flex items-center gap-3 group">
+          <img 
+            src="./images/akshara-logo.png" 
+            alt="Akshara Vidyaashram Official Logo" 
+            class="h-13 w-13 sm:h-15 sm:w-15 object-contain"
+          />
+          <div class="flex flex-col">
+            <span class="font-heading text-lg sm:text-xl font-extrabold tracking-tight text-[#0c2340] leading-none">
+              AKSHARA
+            </span>
+            <span class="font-heading text-[11px] sm:text-xs font-bold tracking-widest text-[#9c1e22] uppercase leading-none mt-1">
+              VIDYAASHRAM
+            </span>
+            <span class="text-[9px] sm:text-[10px] font-mono text-gray-500 uppercase tracking-wider leading-none mt-1">
+              beyond the syllabus...
+            </span>
+          </div>
+        </a>
+
+        <div class="flex items-center gap-3 sm:gap-4">
+          <nav class="hidden md:flex items-center gap-5 text-xs font-semibold text-gray-700">
+            <a href="#event-overview" class="hover:text-[#9c1e22] transition-colors py-1">Overview</a>
+            <a href="#event-details" class="hover:text-[#9c1e22] transition-colors py-1">Details</a>
+            <a href="#registration-section" class="hover:text-[#9c1e22] transition-colors py-1">Registration</a>
+            <a href="#approvals-section" class="hover:text-[#9c1e22] transition-colors py-1">Approvals</a>
+            <a href="#rehearsals-judges" class="hover:text-[#9c1e22] transition-colors py-1">Rehearsals &amp; Judges</a>
+          </nav>
+
+          <a
+            href="#registration-section"
+            class="inline-flex items-center gap-1.5 bg-gradient-to-r from-[#9c1e22] to-[#c5282e] hover:from-[#801015] hover:to-[#9c1e22] text-white font-bold text-xs sm:text-sm px-4 sm:px-5 py-2.5 rounded-full shadow-sm hover:shadow-md transition-all"
+          >
+            <span>Register Now</span>
+          </a>
+        </div>
+
+      </div>
+    </div>
+  </header>
+
+  <!-- 1. HERO SECTION -->
+  <section class="relative overflow-hidden bg-gradient-to-b from-[#e8f3fc] via-[#fdf7ee] to-[#faf8f5] pt-6 sm:pt-10 pb-14 sm:pb-20 border-b border-amber-200/60">
+    
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+
+      <div class="grid grid-cols-1 md:grid-cols-12 gap-6 lg:gap-10 items-center">
+        
+        <!-- Left Column: Title, Ribbons, Badges & Specs -->
+        <div class="md:col-span-7 text-center md:text-left space-y-4">
+
+          <!-- Ribbon Badge -->
+          <div class="inline-flex items-center justify-center md:justify-start">
+            <div class="bg-gradient-to-r from-[#e53e3e] via-[#dd6b20] to-[#d69e2e] text-white font-black text-xs sm:text-sm tracking-wider uppercase px-4 sm:px-7 py-1.5 sm:py-2 rounded-full shadow-md transform -rotate-1">
+              ✨ IT&apos;S YOUR TIME TO SHINE! ✨
+            </div>
+          </div>
+
+          <!-- Main Event Title -->
+          <div class="space-y-1 sm:space-y-2">
+            <h1 class="text-4xl sm:text-5xl lg:text-6xl xl:text-7xl font-black tracking-tight text-[#0c2340] leading-none">
+              TALENTRIA <span class="text-[#9c1e22]">26</span>
+            </h1>
+            
+            <div class="flex items-center justify-center md:justify-start gap-1 sm:gap-1.5 flex-wrap pt-0.5">
+              <div class="inline-flex items-center gap-1 sm:gap-1.5 px-3 py-1 bg-white/90 rounded-xl border border-amber-200 shadow-2xs font-extrabold text-xs sm:text-sm uppercase tracking-wider">
+                <span class="text-[#e53e3e]">O</span>
+                <span class="text-[#319795]">P</span>
+                <span class="text-[#dd6b20]">E</span>
+                <span class="text-[#3182ce]">N</span>
+                <span class="text-gray-400 mx-0.5">·</span>
+                <span class="text-[#dd6b20]">T</span>
+                <span class="text-[#38a169]">A</span>
+                <span class="text-[#4c51bf]">L</span>
+                <span class="text-[#e53e3e]">E</span>
+                <span class="text-[#805ad5]">N</span>
+                <span class="text-[#d53f8c]">T</span>
+                <span class="text-gray-400 mx-0.5">·</span>
+                <span class="text-[#e53e3e]">C</span>
+                <span class="text-[#319795]">O</span>
+                <span class="text-[#dd6b20]">M</span>
+                <span class="text-[#3182ce]">P</span>
+                <span class="text-[#805ad5]">E</span>
+                <span class="text-[#38a169]">T</span>
+                <span class="text-[#d53f8c]">I</span>
+                <span class="text-[#e53e3e]">T</span>
+                <span class="text-[#319795]">I</span>
+                <span class="text-[#dd6b20]">O</span>
+                <span class="text-[#3182ce]">N</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- MOBILE FLYER: Visible immediately under the title on screens < md -->
+          <div class="md:hidden flex flex-col items-center justify-center pt-2 pb-1">
+            <div onclick="openFlyerModal()" class="cursor-pointer max-w-[270px] bg-white p-2 rounded-2xl border-2 border-amber-300 shadow-lg overflow-hidden">
+              <img 
+                src="./images/talentria-flyer.jpg" 
+                alt="TALENTRIA 26 Official Poster" 
+                class="w-full h-auto object-contain rounded-xl"
+              />
+              <div class="pt-1.5 flex justify-between items-center text-[10px] text-gray-500 font-mono px-1">
+                <span>Sat, 21 Nov 2026</span>
+                <span class="text-[#9c1e22] font-bold">🔍 Tap to zoom</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Supporting Message Badge -->
+          <div>
+            <span class="inline-block bg-[#fef08a] border-2 border-[#ca8a04] text-[#854d0e] font-black text-xs sm:text-sm md:text-base uppercase tracking-wider px-3.5 sm:px-5 py-1.5 rounded-xl shadow-xs">
+              OPEN TO ALL THE GRADES OF AKSHARITES
+            </span>
+            <p class="text-xs font-semibold text-gray-600 mt-1 font-mono uppercase tracking-wider">
+              Students from Grades 1–9 · Open Talent Competition
+            </p>
+          </div>
+
+          <!-- Patterned Motto Box -->
+          <div class="pt-0.5 max-w-xl mx-auto md:mx-0">
+            <div class="p-1 rounded-2xl bg-gradient-to-r from-amber-400 via-orange-400 to-rose-400 shadow-md">
+              <div class="bg-[#fef9c3] border border-amber-300 py-2.5 sm:py-3 px-4 rounded-xl text-center">
+                <p class="font-heading text-sm sm:text-lg md:text-xl font-black text-[#713f12] tracking-wide">
+                  SHOW YOUR TALENT. SHARE YOUR PASSION.
+                </p>
+              </div>
+            </div>
+          </div>
+
+          <!-- Quick Event Details Pills -->
+          <div class="grid grid-cols-2 sm:grid-cols-4 gap-2 pt-1 text-left">
+            <div class="bg-white p-2.5 sm:p-3 rounded-xl border border-amber-200/80 shadow-2xs">
+              <p class="text-[10px] font-mono uppercase font-bold text-gray-500">📅 Date</p>
+              <p class="text-xs sm:text-sm font-bold text-[#0c2340]">21 Nov 2026</p>
+              <p class="text-[10px] text-gray-500">Saturday</p>
+            </div>
+            <div class="bg-white p-2.5 sm:p-3 rounded-xl border border-amber-200/80 shadow-2xs">
+              <p class="text-[10px] font-mono uppercase font-bold text-gray-500">🕒 Timing</p>
+              <p class="text-xs sm:text-sm font-bold text-amber-900">To be announced</p>
+              <p class="text-[10px] text-gray-500">Communicated later</p>
+            </div>
+            <div class="bg-white p-2.5 sm:p-3 rounded-xl border border-amber-200/80 shadow-2xs">
+              <p class="text-[10px] font-mono uppercase font-bold text-gray-500">🎓 Grades</p>
+              <p class="text-xs sm:text-sm font-bold text-[#0c2340]">Grades 1 – 9</p>
+              <p class="text-[10px] text-gray-500">Primary &amp; Middle</p>
+            </div>
+            <div class="bg-white p-2.5 sm:p-3 rounded-xl border border-amber-200/80 shadow-2xs">
+              <p class="text-[10px] font-mono uppercase font-bold text-gray-500">⏳ Deadline</p>
+              <p class="text-xs sm:text-sm font-bold text-emerald-800">4 Nov 2026</p>
+              <p class="text-[10px] text-emerald-600 font-semibold">Registration cut-off</p>
+            </div>
+          </div>
+
+          <!-- Action Buttons -->
+          <div class="flex flex-col sm:flex-row items-center justify-center md:justify-start gap-2.5 pt-1">
+            <a
+              href="#registration-section"
+              class="w-full sm:w-auto inline-flex items-center justify-center gap-2 bg-[#9c1e22] hover:bg-[#801015] text-white font-extrabold text-xs sm:text-sm px-6 py-3 rounded-xl shadow-md transition-all"
+            >
+              <span>View Registration Process</span> →
+            </a>
+            <button
+              onclick="openFlyerModal()"
+              class="w-full sm:w-auto inline-flex items-center justify-center gap-2 bg-white hover:bg-amber-50 text-[#0c2340] border-2 border-amber-300 font-bold text-xs sm:text-sm px-5 py-2.5 rounded-xl shadow-2xs transition-all cursor-pointer"
+            >
+              <span>🔍 View Fullsize Flyer</span>
+            </button>
+          </div>
+
+        </div>
+
+        <!-- Right Column: DESKTOP / TABLET FLYER -->
+        <div class="hidden md:flex md:col-span-5 flex-col items-center justify-center">
+          <div class="relative group max-w-sm sm:max-w-md w-full">
+            <div class="absolute -inset-2 bg-gradient-to-tr from-amber-400 via-orange-500 to-emerald-500 rounded-3xl blur-xs opacity-70 group-hover:opacity-100 transition duration-300"></div>
+            
+            <div onclick="openFlyerModal()" class="relative bg-white p-2.5 sm:p-3 rounded-2xl border-4 border-amber-300 shadow-xl overflow-hidden cursor-pointer transform group-hover:-translate-y-1 transition-all duration-300">
+              <div class="absolute top-4 right-4 z-20 bg-gradient-to-r from-red-600 to-[#9c1e22] text-white font-mono text-[10px] font-black uppercase px-3 py-1 rounded-full shadow-md">
+                Official Flyer
+              </div>
+
+              <img 
+                src="./images/talentria-flyer.jpg" 
+                alt="TALENTRIA 26 Official Poster - Open to all the grades of Aksharites" 
+                class="w-full h-auto object-contain rounded-xl select-none"
+              />
+
+              <div class="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity duration-200 flex flex-col items-center justify-center text-white p-4 backdrop-blur-2xs rounded-xl">
+                <span class="font-heading font-extrabold text-sm sm:text-base">Click to Enlarge / Download</span>
+                <span class="text-[11px] font-mono text-amber-200 mt-1">Full High-Resolution Poster</span>
+              </div>
+            </div>
+
+            <div class="flex justify-between items-center px-2 pt-2 text-[11px] text-gray-500 font-mono">
+              <span>Saturday, 21 November 2026</span>
+              <button onclick="openFlyerModal()" class="text-[#9c1e22] font-bold hover:underline cursor-pointer">
+                🔍 Click to Zoom
+              </button>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+    </div>
+  </section>
+
+  <!-- 2. EVENT INTRODUCTION -->
+  <section id="event-overview" class="py-16 bg-white">
+    <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
+      
+      <div class="text-center space-y-3 max-w-3xl mx-auto">
+        <span class="text-xs font-mono font-bold tracking-widest text-[#9c1e22] uppercase">
+          Welcome to the Grand Stage
+        </span>
+        <h2 class="font-heading text-3xl sm:text-4xl font-extrabold text-[#0c2340]">
+          An Opportunity to Showcase Talent &amp; Passion
+        </h2>
+        <div class="h-1 w-20 bg-amber-400 mx-auto rounded-full"></div>
+        <p class="text-base text-gray-600 leading-relaxed pt-2">
+          <strong>TALENTRIA 26</strong> is Akshara Vidyaashram&apos;s marquee open talent competition, specially designed for school children from <strong>Grades 1 through 9</strong>. It is a celebratory platform where confidence takes flight, artistic passions are celebrated, and every child discovers their moment in the spotlight.
+        </p>
+      </div>
+
+      <!-- 6 Talent Domains -->
+      <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3 sm:gap-4 pt-10">
+        <div class="bg-[#fff5f5] border border-rose-200 p-4 rounded-2xl text-center space-y-1">
+          <div class="text-2xl mb-1">🎤</div>
+          <h3 class="font-bold text-sm text-[#0c2340]">Vocal &amp; Singing</h3>
+          <p class="text-[11px] text-gray-500">Solo, Classical, Folk &amp; Modern</p>
+        </div>
+        <div class="bg-[#f0fff4] border border-emerald-200 p-4 rounded-2xl text-center space-y-1">
+          <div class="text-2xl mb-1">🎸</div>
+          <h3 class="font-bold text-sm text-[#0c2340]">Instrumental</h3>
+          <p class="text-[11px] text-gray-500">Keyboard, Guitar, Drums &amp; Rhythm</p>
+        </div>
+        <div class="bg-[#fffaf0] border border-amber-200 p-4 rounded-2xl text-center space-y-1">
+          <div class="text-2xl mb-1">💃</div>
+          <h3 class="font-bold text-sm text-[#0c2340]">Dance</h3>
+          <p class="text-[11px] text-gray-500">Classical, Semi-Classical &amp; Free</p>
+        </div>
+        <div class="bg-[#faf5ff] border border-purple-200 p-4 rounded-2xl text-center space-y-1">
+          <div class="text-2xl mb-1">🎨</div>
+          <h3 class="font-bold text-sm text-[#0c2340]">Fine Arts</h3>
+          <p class="text-[11px] text-gray-500">Painting, Sketching &amp; Creative</p>
+        </div>
+        <div class="bg-[#ebf8ff] border border-blue-200 p-4 rounded-2xl text-center space-y-1">
+          <div class="text-2xl mb-1">📖</div>
+          <h3 class="font-bold text-sm text-[#0c2340]">Elocution</h3>
+          <p class="text-[11px] text-gray-500">Storytelling, Poetry &amp; Oratory</p>
+        </div>
+        <div class="bg-[#f7fafc] border border-slate-200 p-4 rounded-2xl text-center space-y-1">
+          <div class="text-2xl mb-1">🎭</div>
+          <h3 class="font-bold text-sm text-[#0c2340]">Dramatic Arts</h3>
+          <p class="text-[11px] text-gray-500">Mime, Monoact &amp; Expressions</p>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- 3. EVENT DETAILS -->
+  <section id="event-details" class="py-16 bg-[#f7f5f0] border-y border-amber-200/50">
+    <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+      
+      <div class="text-center space-y-3 mb-10">
+        <span class="text-xs font-mono font-bold tracking-widest text-[#9c1e22] uppercase">
+          Key Event Specifications
+        </span>
+        <h2 class="font-heading text-3xl sm:text-4xl font-extrabold text-[#0c2340]">
+          Event Details at a Glance
+        </h2>
+        <div class="h-1 w-16 bg-amber-400 mx-auto rounded-full"></div>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+        
+        <div class="bg-white rounded-2xl p-6 border-2 border-rose-100 shadow-xs">
+          <p class="text-xs font-mono uppercase tracking-wider font-bold text-gray-500">Date of Event</p>
+          <h3 class="font-heading text-2xl font-black text-[#0c2340] mt-1">
+            Saturday, 21 Nov 2026
+          </h3>
+          <p class="text-xs text-gray-500 pt-3 border-t border-gray-100 mt-3">
+            Grand celebration of student potential.
+          </p>
+        </div>
+
+        <div class="bg-white rounded-2xl p-6 border-2 border-amber-200 shadow-xs">
+          <p class="text-xs font-mono uppercase tracking-wider font-bold text-gray-500">Event Timing</p>
+          <h3 class="font-heading text-2xl font-black text-amber-900 mt-1">
+            To Be Announced
+          </h3>
+          <p class="text-xs text-amber-800 pt-3 border-t border-gray-100 mt-3 font-semibold">
+            Final schedule communicated later.
+          </p>
+        </div>
+
+        <div class="bg-white rounded-2xl p-6 border-2 border-blue-100 shadow-xs">
+          <p class="text-xs font-mono uppercase tracking-wider font-bold text-gray-500">Eligibility</p>
+          <h3 class="font-heading text-2xl font-black text-[#0c2340] mt-1">
+            Grades 1 – 9
+          </h3>
+          <p class="text-xs text-gray-500 pt-3 border-t border-gray-100 mt-3">
+            Two categories: Grades 1–5 and Grades 6–9.
+          </p>
+        </div>
+
+        <div class="bg-white rounded-2xl p-6 border-2 border-emerald-200 shadow-xs">
+          <p class="text-xs font-mono uppercase tracking-wider font-bold text-gray-500">Registration Deadline</p>
+          <h3 class="font-heading text-2xl font-black text-emerald-800 mt-1">
+            4 November 2026
+          </h3>
+          <p class="text-xs text-emerald-700 font-semibold pt-3 border-t border-gray-100 mt-3">
+            Mandatory deadline to secure entry slot.
+          </p>
+        </div>
+
+      </div>
+
+      <div class="mt-8 max-w-3xl mx-auto">
+        <div class="bg-amber-100 border-l-4 border-amber-500 p-4 rounded-r-xl text-xs sm:text-sm text-amber-900">
+          <strong>Official Note on Event Timing:</strong> Event timing will be finalised and communicated later.
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- 4. HOW TO REGISTER -->
+  <section id="registration-section" class="py-16 sm:py-20 bg-white">
+    <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+      
+      <div class="text-center space-y-3 mb-10">
+        <span class="text-xs font-mono font-bold tracking-widest text-[#9c1e22] uppercase">
+          Participation Procedure
+        </span>
+        <h2 class="font-heading text-3xl sm:text-4xl font-extrabold text-[#0c2340]">
+          How to Register
+        </h2>
+        <div class="h-1 w-20 bg-amber-400 mx-auto rounded-full"></div>
+      </div>
+
+      <div class="max-w-3xl mx-auto mb-8">
+        <div class="bg-gradient-to-r from-red-600 to-[#9c1e22] text-white p-4 sm:p-5 rounded-2xl shadow-md flex flex-col sm:flex-row items-center justify-between gap-4 text-center sm:text-left">
+          <div>
+            <p class="text-xs uppercase font-mono tracking-wider text-amber-200 font-bold">Important Cut-off Date</p>
+            <p class="font-heading text-lg sm:text-xl font-black">Last Date for Registration: 4 November 2026</p>
+          </div>
+          <span class="bg-white text-[#9c1e22] font-black text-xs uppercase px-4 py-2 rounded-full tracking-wider">
+            Enrol Early
+          </span>
+        </div>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-4xl mx-auto">
+        
+        <!-- Grades 1-5 -->
+        <div class="bg-[#fff9f5] border-2 border-orange-200 rounded-3xl p-6 sm:p-8 shadow-sm">
+          <span class="text-xs font-mono font-bold text-orange-600 uppercase tracking-widest block mb-1">Primary Wing</span>
+          <h3 class="font-heading text-2xl sm:text-3xl font-black text-[#0c2340]">Grades 1 – 5</h3>
+          
+          <div class="bg-white p-5 rounded-2xl border border-orange-200 my-4 space-y-2">
+            <p class="text-xs uppercase font-mono text-gray-500 font-bold">Registration Coordinator</p>
+            <h4 class="text-xl font-extrabold text-[#0c2340]">Miss Mona Lisa</h4>
+            <p class="text-xs text-gray-600">Register directly with Miss Mona Lisa before 4 November 2026.</p>
+          </div>
+        </div>
+
+        <!-- Grades 6-9 -->
+        <div class="bg-[#f0f9ff] border-2 border-sky-200 rounded-3xl p-6 sm:p-8 shadow-sm">
+          <span class="text-xs font-mono font-bold text-sky-700 uppercase tracking-widest block mb-1">Middle Wing</span>
+          <h3 class="font-heading text-2xl sm:text-3xl font-black text-[#0c2340]">Grades 6 – 9</h3>
+
+          <div class="bg-white p-5 rounded-2xl border border-sky-200 my-4 space-y-2">
+            <p class="text-xs uppercase font-mono text-gray-500 font-bold">Registration Coordinator</p>
+            <h4 class="text-xl font-extrabold text-[#0c2340]">Miss Gowri</h4>
+            <p class="text-xs text-gray-600">Register directly with Miss Gowri before 4 November 2026.</p>
+          </div>
+        </div>
+
+      </div>
+
+    </div>
+  </section>
+
+  <!-- 5. IMPORTANT APPROVALS -->
+  <section id="approvals-section" class="py-16 bg-[#faf5ee] border-y border-amber-200/60">
+    <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
+      
+      <div class="text-center space-y-3 mb-10">
+        <span class="text-xs font-mono font-bold tracking-widest text-[#9c1e22] uppercase">
+          Quality &amp; Standards Verification
+        </span>
+        <h2 class="font-heading text-3xl sm:text-4xl font-extrabold text-[#0c2340]">
+          Mandatory Performance Approvals
+        </h2>
+        <div class="h-1 w-20 bg-amber-400 mx-auto rounded-full"></div>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+        
+        <!-- Music Approval -->
+        <div class="bg-white rounded-3xl p-6 sm:p-8 border-2 border-indigo-200 shadow-sm">
+          <span class="text-xs font-mono uppercase tracking-wider font-bold text-indigo-600 bg-indigo-50 px-2.5 py-0.5 rounded-full">
+            Music Approval
+          </span>
+          <h3 class="font-heading text-2xl font-bold text-[#0c2340] mt-3">Songs &amp; Music</h3>
+          
+          <div class="bg-indigo-50/60 border border-indigo-100 rounded-2xl p-4 my-4">
+            <p class="text-xs font-mono uppercase tracking-wider font-bold text-gray-500">Authorised In-Charge</p>
+            <p class="text-xl font-extrabold text-indigo-950 mt-1">Miss Priya C.</p>
+          </div>
+          <p class="text-xs sm:text-sm text-gray-600">
+            All songs or music selected for performances must be approved by <strong>Miss Priya C.</strong>
+          </p>
+        </div>
+
+        <!-- Costume Approval -->
+        <div class="bg-white rounded-3xl p-6 sm:p-8 border-2 border-rose-200 shadow-sm">
+          <span class="text-xs font-mono uppercase tracking-wider font-bold text-rose-600 bg-rose-50 px-2.5 py-0.5 rounded-full">
+            Costume Approval
+          </span>
+          <h3 class="font-heading text-2xl font-bold text-[#0c2340] mt-3">Stage Costumes</h3>
+
+          <div class="bg-rose-50/60 border border-rose-100 rounded-2xl p-4 my-4">
+            <p class="text-xs font-mono uppercase tracking-wider font-bold text-gray-500">Authorised In-Charge</p>
+            <p class="text-xl font-extrabold text-rose-950 mt-1">Miss Subashree</p>
+          </div>
+          <p class="text-xs sm:text-sm text-gray-600">
+            All costumes planned for performances must be approved by <strong>Miss Subashree.</strong>
+          </p>
+        </div>
+
+      </div>
+
+    </div>
+  </section>
+
+  <!-- 6 & 7. REHEARSALS & JUDGES -->
+  <section id="rehearsals-judges" class="py-16 sm:py-20 bg-white">
+    <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 space-y-14">
+      
+      <!-- Rehearsals -->
+      <div class="space-y-6 text-center">
+        <span class="text-xs font-mono font-bold tracking-widest text-[#9c1e22] uppercase block">
+          Stage Preparation
+        </span>
+        <h2 class="font-heading text-3xl sm:text-4xl font-extrabold text-[#0c2340]">
+          Rehearsals
+        </h2>
+        
+        <div class="max-w-2xl mx-auto bg-amber-50 border-2 border-amber-300 rounded-2xl p-5 text-center">
+          <p class="font-heading text-xl font-black text-amber-950">
+            &ldquo;Rehearsals will begin five days before the event.&rdquo;
+          </p>
+        </div>
+
+        <div class="max-w-3xl mx-auto bg-[#faf8f5] border border-amber-200 rounded-3xl p-6 sm:p-8 text-left">
+          <p class="text-xs font-mono uppercase tracking-wider text-[#9c1e22] font-bold mb-4">
+            For Grades 1–5, rehearsals will be coordinated by:
+          </p>
+          <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 text-center">
+            <div class="bg-white p-4 rounded-2xl border border-amber-200 font-bold text-[#0c2340]">
+              Miss Swetha
+            </div>
+            <div class="bg-white p-4 rounded-2xl border border-amber-200 font-bold text-[#0c2340]">
+              Miss Sivaranjani
+            </div>
+            <div class="bg-white p-4 rounded-2xl border border-amber-200 font-bold text-[#0c2340]">
+              Miss Swathi
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Judges -->
+      <div class="space-y-6 text-center pt-8 border-t border-gray-100">
+        <span class="text-xs font-mono font-bold tracking-widest text-[#9c1e22] uppercase block">
+          Evaluation Panel
+        </span>
+        <h2 class="font-heading text-3xl sm:text-4xl font-extrabold text-[#0c2340]">
+          Judges – Grades 6–9
+        </h2>
+
+        <div class="grid grid-cols-1 sm:grid-cols-3 gap-6 max-w-3xl mx-auto">
+          <div class="bg-white p-6 rounded-3xl border-2 border-amber-200 shadow-sm text-center">
+            <div class="w-14 h-14 mx-auto rounded-2xl bg-[#9c1e22] text-white flex items-center justify-center font-heading font-black text-lg mb-2">MA</div>
+            <h4 class="font-heading text-lg font-extrabold text-[#0c2340]">Miss Anitha</h4>
+            <p class="text-xs text-[#9c1e22] font-semibold">Judge · Grades 6–9</p>
+          </div>
+
+          <div class="bg-white p-6 rounded-3xl border-2 border-amber-200 shadow-sm text-center">
+            <div class="w-14 h-14 mx-auto rounded-2xl bg-[#0c2340] text-amber-300 flex items-center justify-center font-heading font-black text-lg mb-2">SP</div>
+            <h4 class="font-heading text-lg font-extrabold text-[#0c2340]">Miss Shanmuga Priya</h4>
+            <p class="text-xs text-[#9c1e22] font-semibold">Judge · Grades 6–9</p>
+          </div>
+
+          <div class="bg-white p-6 rounded-3xl border-2 border-amber-200 shadow-sm text-center">
+            <div class="w-14 h-14 mx-auto rounded-2xl bg-[#d97706] text-white flex items-center justify-center font-heading font-black text-lg mb-2">PK</div>
+            <h4 class="font-heading text-lg font-extrabold text-[#0c2340]">Miss Priya K.</h4>
+            <p class="text-xs text-[#9c1e22] font-semibold">Judge · Grades 6–9</p>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- 8. EVENT TIMING NOTICE -->
+  <section class="py-10 bg-gradient-to-r from-amber-500 via-orange-500 to-rose-500 text-white">
+    <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center space-y-3">
+      <p class="text-xs font-mono font-bold uppercase tracking-widest text-amber-100">Schedule Notice</p>
+      <h3 class="font-heading text-2xl sm:text-3xl font-extrabold">
+        Event timing will be finalised and communicated later.
+      </h3>
+    </div>
+  </section>
+
+  <!-- 9. FINAL CTA -->
+  <section class="py-16 bg-[#0c2340] text-white text-center">
+    <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 space-y-6">
+      <h2 class="font-heading text-3xl sm:text-5xl font-black text-white">
+        YOUR TALENT. YOUR PASSION.<br />
+        <span class="text-amber-400">YOUR STAGE.</span>
+      </h2>
+      <p class="font-heading text-xl sm:text-2xl text-amber-200">
+        Get ready to shine at TALENTRIA 26!
+      </p>
+      <div class="pt-4">
+        <a
+          href="#registration-section"
+          class="inline-block bg-gradient-to-r from-amber-400 to-amber-500 text-navy-950 font-black text-sm sm:text-base px-8 py-3.5 rounded-xl shadow-lg"
+        >
+          Connect with Your Coordinator
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer class="bg-[#051424] text-white py-10 border-t border-navy-800 text-center text-xs text-gray-400">
+    <div class="max-w-7xl mx-auto px-4 space-y-3">
+      <p class="font-heading text-base font-bold text-white">AKSHARA VIDYAASHRAM · CUDDALORE</p>
+      <p>CBSE Affiliation #1930438 · beyond the syllabus...</p>
+      <p>© 2026 Akshara Vidyaashram. All rights reserved. TALENTRIA 26 – Open Talent Competition.</p>
+    </div>
+  </footer>
+
+  <!-- MODAL -->
+  <div id="flyerModal" class="hidden fixed inset-0 z-50 bg-black/80 backdrop-blur-xs flex items-center justify-center p-4" onclick="closeFlyerModal()">
+    <div class="relative bg-white rounded-3xl max-w-xl w-full p-4 text-center space-y-3" onclick="event.stopPropagation()">
+      <div class="flex justify-between items-center pb-2 border-b border-gray-100">
+        <h3 class="font-heading font-black text-base text-[#0c2340]">TALENTRIA 26 Official Flyer</h3>
+        <button onclick="closeFlyerModal()" class="text-gray-500 hover:text-black font-bold text-lg p-1">✕</button>
+      </div>
+      <img src="./images/talentria-flyer.jpg" alt="TALENTRIA 26 Flyer" class="w-full h-auto max-h-[75vh] object-contain rounded-xl" />
+      <div class="flex justify-between items-center text-xs text-gray-500 pt-1">
+        <span>Saturday, 21 November 2026</span>
+        <a href="./images/talentria-flyer.jpg" download="TALENTRIA-26-Flyer.jpg" class="text-[#9c1e22] font-bold hover:underline">Download Poster</a>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    function openFlyerModal() { document.getElementById('flyerModal').classList.remove('hidden'); }
+    function closeFlyerModal() { document.getElementById('flyerModal').classList.add('hidden'); }
+  </script>
+</body>
+</html>
