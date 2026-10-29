@@ -11,6 +11,7 @@ const app = express();
 const PORT = 3000;
 
 app.use(express.json());
+app.use(express.static(path.join(process.cwd(), "public")));
 
 // Custom route to serve uploaded image attachments directly or fall back to beautiful Unsplash photos
 app.get("/input_file_:id(\\d+).png", (req, res) => {
