@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import DiwaliWelcome from './components/DiwaliWelcome';
 import Navbar from './components/Navbar';
 import Hero from './components/Hero';
 import DirectLeadForm from './components/DirectLeadForm';
@@ -33,6 +34,9 @@ export default function App() {
 
   return (
     <div className="min-h-screen bg-white text-gray-900 selection:bg-gold-500 selection:text-navy-900 scroll-smooth pb-16 sm:pb-0">
+      {/* First-time visitor Diwali Welcome Experience */}
+      <DiwaliWelcome />
+
       {/* Google Analytics & Meta Pixel Tracker script emulation */}
       <AnalyticsAndMetaPixel />
 
