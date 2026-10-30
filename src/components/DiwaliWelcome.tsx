@@ -1,9 +1,25 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { X } from 'lucide-react';
 
-const STORAGE_KEY = 'diwaliWelcomeShown';
-const DISPLAY_DURATION = 4400; // Remains visible for ~4.4 seconds before smoothly disappearing
+const DISPLAY_DURATION = 4800; // Visible for ~4.8 seconds before smoothly disappearing
 const FADE_OUT_DURATION = 700; // Smooth 0.7s fade-out transition
+
+interface Particle {
+  x: number;
+  y: number;
+  w: number;
+  h: number;
+  color: string;
+  type: 'confetti' | 'sparkle' | 'ember';
+  vx: number;
+  vy: number;
+  rotation: number;
+  rotationSpeed: number;
+  tilt: number;
+  tiltSpeed: number;
+  alpha: number;
+  alphaSpeed: number;
+}
 
 export default function DiwaliWelcome() {
   const [isVisible, setIsVisible] = useState(false);
@@ -12,7 +28,7 @@ export default function DiwaliWelcome() {
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
   const animFrameIdRef = useRef<number | null>(null);
 
-  // Check first-time visitor status on mount
+  // Show welcome animation for all visitors
   useEffect(() => {
     // Check reduced motion accessibility preference
     if (typeof window !== 'undefined' && window.matchMedia) {
@@ -20,37 +36,11 @@ export default function DiwaliWelcome() {
       setPrefersReducedMotion(motionQuery.matches);
     }
 
-    try {
-      // Allow previewing via query param ?diwali=preview or ?preview-diwali
-      const params = new URLSearchParams(window.location.search);
-      const isPreview = params.get('diwali') === 'preview' || params.has('preview-diwali');
-
-      // Expose console helper methods for testing and quality assurance
-      (window as unknown as Record<string, unknown>).__resetDiwaliWelcome = () => {
-        localStorage.removeItem(STORAGE_KEY);
-        console.log('[DiwaliWelcome] LocalStorage flag reset. Refresh to see the welcome animation.');
-      };
-      (window as unknown as Record<string, unknown>).__triggerDiwaliWelcome = () => {
-        localStorage.removeItem(STORAGE_KEY);
-        window.location.reload();
-      };
-
-      const hasShown = localStorage.getItem(STORAGE_KEY);
-
-      if (!hasShown || isPreview) {
-        setIsVisible(true);
-        // Mark as seen so returning visitors do not see it again
-        if (!isPreview) {
-          localStorage.setItem(STORAGE_KEY, 'true');
-        }
-      }
-    } catch {
-      // Graceful fallback if localStorage is unavailable
-      setIsVisible(true);
-    }
+    // Always show for all visitors
+    setIsVisible(true);
   }, []);
 
-  // Timer to initiate smooth fade-out after ~4.4 seconds
+  // Timer to initiate smooth fade-out after ~4.8 seconds
   useEffect(() => {
     if (!isVisible) return;
 
@@ -81,7 +71,7 @@ export default function DiwaliWelcome() {
     }, FADE_OUT_DURATION);
   };
 
-  // Golden stardust & warm festive Diwali light particles on canvas
+  // Rich golden confetti flakes, sparkles & warm light particles
   useEffect(() => {
     if (!isVisible || prefersReducedMotion) return;
 
@@ -90,38 +80,59 @@ export default function DiwaliWelcome() {
     const ctx = canvas.getContext('2d');
     if (!ctx) return;
 
-    let width = (canvas.width = window.innerWidth);
-    let height = (canvas.height = window.innerHeight);
+    let width = window.innerWidth;
+    let height = window.innerHeight;
+    const dpr = Math.min(window.devicePixelRatio || 1, 2);
+
+    const setupCanvasSize = () => {
+      if (!canvas) return;
+      width = window.innerWidth;
+      height = window.innerHeight;
+      canvas.width = width * dpr;
+      canvas.height = height * dpr;
+      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    };
+    setupCanvasSize();
 
     const handleResize = () => {
-      if (!canvas) return;
-      width = canvas.width = window.innerWidth;
-      height = canvas.height = window.innerHeight;
+      setupCanvasSize();
     };
     window.addEventListener('resize', handleResize);
 
-    // Tasteful golden stardust & warm festive light embers (no birthday confetti)
-    const particleColors = [
-      '#FCD34D', // Gold 300
-      '#F59E0B', // Amber 500
-      '#FBBF24', // Amber 400
-      '#FEF3C7', // Warm Cream
+    // Festive golden palette: metallic gold, amber, champagne, warm yellow
+    const goldPalette = [
+      '#FFDF00', // Royal Gold
+      '#F59E0B', // Warm Amber
       '#D4AF37', // Metallic Gold
+      '#FBBF24', // Amber 400
+      '#FDE047', // Radiant Gold
+      '#FFF3B0', // Champagne Cream
+      '#E6A100', // Deep Gold
     ];
 
-    const particleCount = Math.min(Math.floor((width * height) / 24000), 45);
-    const particles = Array.from({ length: particleCount }, () => ({
-      x: Math.random() * width,
-      y: Math.random() * height,
-      radius: Math.random() * 2.2 + 1,
-      color: particleColors[Math.floor(Math.random() * particleColors.length)],
-      alpha: Math.random() * 0.6 + 0.2,
-      alphaSpeed: (Math.random() * 0.015 + 0.005) * (Math.random() > 0.5 ? 1 : -1),
-      vy: -(Math.random() * 0.45 + 0.2), // gentle upward float like warm embers
-      vx: (Math.random() - 0.5) * 0.25,
-      isSparkle: Math.random() > 0.65,
-      sparkleAngle: Math.random() * Math.PI,
-    }));
+    const particleCount = Math.min(Math.floor((width * height) / 14000), 75);
+    const particles: Particle[] = Array.from({ length: particleCount }, () => {
+      const typeRand = Math.random();
+      const type: 'confetti' | 'sparkle' | 'ember' = 
+        typeRand < 0.55 ? 'confetti' : typeRand < 0.85 ? 'sparkle' : 'ember';
+
+      return {
+        x: Math.random() * width,
+        y: Math.random() * height - height * 0.2,
+        w: Math.random() * 6 + 5,
+        h: Math.random() * 8 + 6,
+        color: goldPalette[Math.floor(Math.random() * goldPalette.length)],
+        type,
+        vx: (Math.random() - 0.5) * 1.2,
+        vy: type === 'confetti' ? Math.random() * 1.4 + 1.2 : Math.random() * 0.8 + 0.4,
+        rotation: Math.random() * Math.PI * 2,
+        rotationSpeed: (Math.random() * 0.04 + 0.01) * (Math.random() > 0.5 ? 1 : -1),
+        tilt: Math.random() * Math.PI * 2,
+        tiltSpeed: Math.random() * 0.06 + 0.03,
+        alpha: Math.random() * 0.4 + 0.6,
+        alphaSpeed: Math.random() * 0.02 + 0.01,
+      };
+    });
 
     const render = () => {
       ctx.clearRect(0, 0, width, height);
@@ -129,34 +140,46 @@ export default function DiwaliWelcome() {
       for (let i = 0; i < particles.length; i++) {
         const p = particles[i];
 
-        // Pulse alpha gently
-        p.alpha += p.alphaSpeed;
-        if (p.alpha > 0.85 || p.alpha < 0.15) {
-          p.alphaSpeed = -p.alphaSpeed;
-        }
-
-        // Float upwards softly with gentle sinusoidal sway
+        // Motion physics
+        p.rotation += p.rotationSpeed;
+        p.tilt += p.tiltSpeed;
         p.y += p.vy;
-        p.x += p.vx + Math.sin(p.y * 0.012) * 0.2;
+        p.x += p.vx + Math.sin(p.tilt) * 0.8;
 
-        // Wrap around screen boundaries
-        if (p.y < -10) {
-          p.y = height + 10;
+        // Wrap around bottom/sides
+        if (p.y > height + 20) {
+          p.y = -20;
           p.x = Math.random() * width;
         }
-        if (p.x < -10) p.x = width + 10;
-        if (p.x > width + 10) p.x = -10;
+        if (p.x < -20) p.x = width + 20;
+        if (p.x > width + 20) p.x = -20;
 
         ctx.save();
-        ctx.globalAlpha = Math.max(0, Math.min(1, p.alpha));
+        ctx.globalAlpha = p.alpha;
 
-        if (p.isSparkle) {
-          // Elegant 4-point golden star sparkle
+        if (p.type === 'confetti') {
+          // 3D flipping metallic golden foil confetti ribbon/flake
           ctx.translate(p.x, p.y);
-          ctx.rotate(p.sparkleAngle);
+          ctx.rotate(p.rotation);
+          const currentTilt = Math.sin(p.tilt);
+
+          ctx.fillStyle = p.color;
+          ctx.beginPath();
+          // Draw rotated, 3D-compressed rectangle for fluttering paper foil effect
+          ctx.fillRect(-p.w / 2, (-p.h / 2) * currentTilt, p.w, p.h * Math.abs(currentTilt));
+
+          // Subtle reflective shine highlight on face
+          if (Math.abs(currentTilt) > 0.5) {
+            ctx.fillStyle = 'rgba(255, 255, 255, 0.4)';
+            ctx.fillRect(-p.w / 2, (-p.h / 4) * currentTilt, p.w, (p.h / 4) * Math.abs(currentTilt));
+          }
+        } else if (p.type === 'sparkle') {
+          // 4-point golden twinkling star
+          ctx.translate(p.x, p.y);
+          ctx.rotate(p.rotation);
           ctx.strokeStyle = p.color;
-          ctx.lineWidth = 1;
-          const s = p.radius * 2.2;
+          ctx.lineWidth = 1.4;
+          const s = p.w * 0.85;
           ctx.beginPath();
           ctx.moveTo(0, -s);
           ctx.lineTo(0, s);
@@ -164,21 +187,20 @@ export default function DiwaliWelcome() {
           ctx.lineTo(s, 0);
           ctx.stroke();
 
-          // Center glow core
+          // Center bright white spark
           ctx.fillStyle = '#FFFFFF';
           ctx.beginPath();
-          ctx.arc(0, 0, p.radius * 0.6, 0, Math.PI * 2);
+          ctx.arc(0, 0, 1.8, 0, Math.PI * 2);
           ctx.fill();
         } else {
-          // Soft glowing golden ember
-          const gradient = ctx.createRadialGradient(p.x, p.y, 0, p.x, p.y, p.radius * 2.5);
+          // Glowing warm golden light orb
+          const gradient = ctx.createRadialGradient(p.x, p.y, 0, p.x, p.y, p.w * 1.5);
           gradient.addColorStop(0, '#FFFFFF');
-          gradient.addColorStop(0.3, p.color);
+          gradient.addColorStop(0.35, p.color);
           gradient.addColorStop(1, 'rgba(212, 175, 55, 0)');
-
           ctx.fillStyle = gradient;
           ctx.beginPath();
-          ctx.arc(p.x, p.y, p.radius * 2.5, 0, Math.PI * 2);
+          ctx.arc(p.x, p.y, p.w * 1.5, 0, Math.PI * 2);
           ctx.fill();
         }
 
@@ -222,11 +244,11 @@ export default function DiwaliWelcome() {
       <div 
         className="absolute inset-0 pointer-events-none"
         style={{
-          background: 'radial-gradient(circle at 50% 48%, rgba(212, 175, 55, 0.16) 0%, rgba(184, 146, 41, 0.08) 35%, transparent 70%)',
+          background: 'radial-gradient(circle at 50% 48%, rgba(212, 175, 55, 0.22) 0%, rgba(184, 146, 41, 0.1) 40%, transparent 75%)',
         }}
       />
 
-      {/* Golden Festive Light Particle Canvas */}
+      {/* Golden Festive Confetti & Light Particle Canvas */}
       {!prefersReducedMotion && (
         <canvas
           ref={canvasRef}
@@ -236,19 +258,19 @@ export default function DiwaliWelcome() {
 
       {/* Centered Welcome Card */}
       <div
-        className={`relative w-full max-w-lg rounded-2xl sm:rounded-3xl border border-amber-400/35 p-6 sm:p-10 text-center shadow-2xl ${
+        className={`relative w-full max-w-lg rounded-2xl sm:rounded-3xl border border-amber-400/40 p-6 sm:p-10 text-center shadow-2xl ${
           isFadingOut ? 'diwali-card-exit' : 'diwali-card-enter'
         }`}
         style={{
           background: 'linear-gradient(180deg, rgba(16, 42, 67, 0.96) 0%, rgba(12, 35, 64, 0.98) 50%, rgba(5, 20, 36, 0.99) 100%)',
-          boxShadow: '0 0 50px rgba(212, 175, 55, 0.22), inset 0 1px 1px rgba(254, 243, 199, 0.25)',
+          boxShadow: '0 0 60px rgba(212, 175, 55, 0.28), inset 0 1px 1px rgba(254, 243, 199, 0.3)',
         }}
       >
         {/* Top-Right Discreet Dismiss Button */}
         <button
           onClick={dismissGreeting}
           aria-label="Skip welcome message"
-          className="absolute top-4 right-4 sm:top-5 sm:right-5 p-2 rounded-full text-amber-200/70 hover:text-amber-100 hover:bg-amber-500/15 transition-colors focus:outline-none focus:ring-2 focus:ring-amber-400/50 cursor-pointer"
+          className="absolute top-4 right-4 sm:top-5 sm:right-5 p-2 rounded-full text-amber-200/80 hover:text-amber-100 hover:bg-amber-500/20 transition-colors focus:outline-none focus:ring-2 focus:ring-amber-400/50 cursor-pointer"
         >
           <X className="w-5 h-5" />
         </button>
@@ -258,7 +280,7 @@ export default function DiwaliWelcome() {
           <div className="relative">
             {/* Soft radiant ambient glow ring behind Diya */}
             <div
-              className={`absolute -inset-4 rounded-full bg-amber-400/20 blur-xl ${
+              className={`absolute -inset-4 rounded-full bg-amber-400/25 blur-xl ${
                 prefersReducedMotion ? '' : 'animate-pulse'
               }`}
               style={{ animationDuration: '3s' }}
@@ -266,14 +288,14 @@ export default function DiwaliWelcome() {
 
             {/* Stylized Golden Brass Diya SVG */}
             <svg
-              className="w-20 h-20 sm:w-24 sm:h-24 relative drop-shadow-[0_4px_20px_rgba(245,158,11,0.5)]"
+              className="w-20 h-20 sm:w-24 sm:h-24 relative drop-shadow-[0_4px_22px_rgba(245,158,11,0.6)]"
               viewBox="0 0 120 100"
               fill="none"
               xmlns="http://www.w3.org/2000/svg"
               aria-hidden="true"
             >
               {/* Radiating Light Aura Wave */}
-              <circle cx="60" cy="30" r="24" fill="url(#radianceGlow)" opacity="0.4" />
+              <circle cx="60" cy="30" r="24" fill="url(#radianceGlow)" opacity="0.45" />
 
               {/* Flame Outer Halo */}
               <path
@@ -289,7 +311,7 @@ export default function DiwaliWelcome() {
               />
 
               {/* Flame Center White Spark */}
-              <ellipse cx="60" cy="32" rx="2.5" ry="5" fill="#FFFFFF" opacity="0.9" />
+              <ellipse cx="60" cy="32" rx="2.5" ry="5" fill="#FFFFFF" opacity="0.95" />
 
               {/* Diya Base / Oil Lamp Body */}
               <path
@@ -329,8 +351,8 @@ export default function DiwaliWelcome() {
               {/* SVG Gradients */}
               <defs>
                 <radialGradient id="radianceGlow" cx="50%" cy="50%" r="50%">
-                  <stop offset="0%" stopColor="#fbbf24" stopOpacity="0.8" />
-                  <stop offset="60%" stopColor="#f59e0b" stopOpacity="0.3" />
+                  <stop offset="0%" stopColor="#fbbf24" stopOpacity="0.85" />
+                  <stop offset="60%" stopColor="#f59e0b" stopOpacity="0.35" />
                   <stop offset="100%" stopColor="#d97706" stopOpacity="0" />
                 </radialGradient>
 
@@ -376,21 +398,21 @@ export default function DiwaliWelcome() {
             background: 'linear-gradient(135deg, #FFFBEB 0%, #FDE68A 30%, #F59E0B 70%, #D4AF37 100%)',
             WebkitBackgroundClip: 'text',
             WebkitTextFillColor: 'transparent',
-            textShadow: '0 2px 20px rgba(245, 158, 11, 0.3)',
+            textShadow: '0 2px 20px rgba(245, 158, 11, 0.35)',
           }}
         >
           Happy Diwali
         </h2>
 
         {/* Elegant Gold Divider with Floral/Diamond Motif */}
-        <div className="flex items-center justify-center gap-3 my-4 sm:my-5 opacity-80">
+        <div className="flex items-center justify-center gap-3 my-4 sm:my-5 opacity-85">
           <div className="h-[1px] w-12 sm:w-16 bg-gradient-to-r from-transparent via-amber-400 to-amber-300" />
-          <div className="w-1.5 h-1.5 rotate-45 bg-amber-300 shadow-[0_0_6px_#fbbf24]" />
+          <div className="w-1.5 h-1.5 rotate-45 bg-amber-300 shadow-[0_0_8px_#fbbf24]" />
           <div className="h-[1px] w-12 sm:w-16 bg-gradient-to-l from-transparent via-amber-400 to-amber-300" />
         </div>
 
         {/* 2. Centred Welcome Message Blessing */}
-        <p className="font-sans text-sm sm:text-base md:text-lg text-amber-50/90 leading-relaxed max-w-md mx-auto font-light px-2">
+        <p className="font-sans text-sm sm:text-base md:text-lg text-amber-50/95 leading-relaxed max-w-md mx-auto font-light px-2">
           “May the light of Diwali illuminate every child’s journey of learning, discovery and growth.”
         </p>
 
@@ -400,17 +422,17 @@ export default function DiwaliWelcome() {
         </p>
 
         {/* Discreet Continue / Skip Action */}
-        <div className="mt-6 sm:mt-8 pt-4 border-t border-amber-500/15">
+        <div className="mt-6 sm:mt-8 pt-4 border-t border-amber-500/20">
           <button
             onClick={dismissGreeting}
-            className="text-xs sm:text-sm font-sans tracking-wider text-amber-200/70 hover:text-amber-100 transition-colors uppercase cursor-pointer py-1.5 px-4 rounded-full hover:bg-amber-400/10 focus:outline-none focus:ring-1 focus:ring-amber-300/40"
+            className="text-xs sm:text-sm font-sans tracking-wider text-amber-200/80 hover:text-amber-100 transition-colors uppercase cursor-pointer py-1.5 px-4 rounded-full hover:bg-amber-400/10 focus:outline-none focus:ring-1 focus:ring-amber-300/40"
           >
             Enter Website →
           </button>
         </div>
 
         {/* Subtle timer progress hairline at bottom */}
-        <div className="absolute bottom-0 left-6 right-6 h-[1.5px] bg-amber-500/10 overflow-hidden rounded-full">
+        <div className="absolute bottom-0 left-6 right-6 h-[1.5px] bg-amber-500/15 overflow-hidden rounded-full">
           <div
             className={`h-full bg-gradient-to-r from-amber-400 via-yellow-200 to-amber-400 ${
               prefersReducedMotion ? 'w-full' : 'diwali-progress-bar'
@@ -462,12 +484,12 @@ export default function DiwaliWelcome() {
           0%, 100% {
             transform: scale(1) translateY(0);
             transform-origin: 60px 44px;
-            filter: drop-shadow(0 0 10px rgba(245, 158, 11, 0.7));
+            filter: drop-shadow(0 0 12px rgba(245, 158, 11, 0.75));
           }
           50% {
             transform: scale(1.08, 0.94) translateY(-1px);
             transform-origin: 60px 44px;
-            filter: drop-shadow(0 0 18px rgba(251, 191, 36, 0.95));
+            filter: drop-shadow(0 0 20px rgba(251, 191, 36, 0.95));
           }
         }
         .diwali-flame-pulse {
@@ -476,7 +498,7 @@ export default function DiwaliWelcome() {
         @keyframes diwaliProgressBar {
           0% {
             width: 0%;
-            opacity: 0.8;
+            opacity: 0.85;
           }
           100% {
             width: 100%;
