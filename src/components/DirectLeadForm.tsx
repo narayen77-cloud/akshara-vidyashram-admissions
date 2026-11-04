@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { User, Phone, BookOpen, Clock, MessageSquare, CheckCircle, ArrowRight, ShieldCheck, Heart } from 'lucide-react';
+import { User, Phone, BookOpen, Clock, MessageSquare, CheckCircle, ArrowRight, ShieldCheck, Heart, AlertCircle } from 'lucide-react';
 import { trackAdmissionsLead } from './AnalyticsAndMetaPixel';
 
 interface DirectLeadFormProps {
@@ -40,14 +40,14 @@ export default function DirectLeadForm({ lang }: DirectLeadFormProps) {
     e.preventDefault();
     setErrorText('');
 
-    // Smooth validations
-    if (!formData.parentName.trim()) {
-      setErrorText(lang === 'en' ? 'Parent name is required.' : 'பெற்றோர் பெயர் தேவை.');
+    // Field validations
+    if (!formData.parentName.trim() || formData.parentName.trim().length < 2) {
+      setErrorText(lang === 'en' ? 'Please enter a valid parent name.' : 'பெற்றோர் பெயரைச் சரியாக உள்ளிடவும்.');
       return;
     }
     const cleanPhone = formData.phone.replace(/\s+/g, '').replace(/[-+()]/g, '');
     if (cleanPhone.length < 10) {
-      setErrorText(lang === 'en' ? 'Please enter a valid active mobile number.' : 'சரியான கைபேசி எண்ணை உள்ளிடவும்.');
+      setErrorText(lang === 'en' ? 'Please enter a valid 10-digit mobile number.' : 'சரியான 10 இலக்க கைபேசி எண்ணை உள்ளிடவும்.');
       return;
     }
     if (!formData.gradeApplied) {
@@ -76,20 +76,36 @@ export default function DirectLeadForm({ lang }: DirectLeadFormProps) {
     };
 
     try {
-      // 1. POST to backend server
-      await fetch('/api/admissions/enquiry', {
+      // Direct Web3Forms API submission
+      const formPayload = new FormData();
+      formPayload.append('access_key', 'f713c1bc-4523-4c3d-8050-a648ac2945f6');
+      formPayload.append('from_name', 'Akshara Admissions');
+      formPayload.append('subject', `Direct Admissions Enquiry - ${formData.parentName} (${formData.gradeApplied})`);
+      formPayload.append('Parent Name', formData.parentName);
+      formPayload.append('Phone Number', formData.phone);
+      formPayload.append('Grade Applied For', formData.gradeApplied);
+      formPayload.append('Preferred Callback Time', formData.preferredCallbackTime);
+      formPayload.append('Message / Enquiry', formData.message || 'None');
+      formPayload.append('Enquiry Ticket ID', ticketId);
+
+      const response = await fetch('https://api.web3forms.com/submit', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(newLead)
+        body: formPayload
       });
 
-      // 2. Save to localStorage to integrate seamlessly into Admissions Desk dashboard!
+      const resData = await response.json();
+
+      if (!resData.success) {
+        throw new Error(resData.message || 'Submission failed');
+      }
+
+      // Save to localStorage to integrate seamlessly into Admissions Desk dashboard
       const stored = localStorage.getItem('akshara_enquiry_leads');
       const leadsList = stored ? JSON.parse(stored) : [];
       leadsList.unshift(newLead);
       localStorage.setItem('akshara_enquiry_leads', JSON.stringify(leadsList));
 
-      // 3. Track lead conversion meta pixel
+      // Track lead conversion meta pixel
       trackAdmissionsLead('Campaign Direct Enquiry', {
         grade: formData.gradeApplied,
         mode: `Callback_${formData.preferredCallbackTime}`
@@ -97,31 +113,14 @@ export default function DirectLeadForm({ lang }: DirectLeadFormProps) {
 
       setIsSubmitting(false);
       setSubmitted(true);
-
-      // 4. Automatically or seamlessly route to the official campaign WhatsApp number: +91 8925693013
-      const textMessage = encodeURIComponent("Hello, I am interested in Akshara Vidyaashram admissions. Please share details.");
-      const whatsappUrl = `https://wa.me/918925693013?text=${textMessage}`;
-      
-      // Delay the redirection slightly for smooth user feedback
-      setTimeout(() => {
-        window.open(whatsappUrl, '_blank');
-      }, 1500);
-
-    } catch (err) {
-      console.error("Direct enquiry submission failed", err);
+    } catch (err: any) {
+      console.error('Direct enquiry submission failed', err);
       setIsSubmitting(false);
-      // Fallback submission locally anyway
-      const stored = localStorage.getItem('akshara_enquiry_leads');
-      const leadsList = stored ? JSON.parse(stored) : [];
-      leadsList.unshift(newLead);
-      localStorage.setItem('akshara_enquiry_leads', JSON.stringify(leadsList));
-      setSubmitted(true);
-      
-      const textMessage = encodeURIComponent("Hello, I am interested in Akshara Vidyaashram admissions. Please share details.");
-      const whatsappUrl = `https://wa.me/918925693013?text=${textMessage}`;
-      setTimeout(() => {
-        window.open(whatsappUrl, '_blank');
-      }, 1500);
+      setErrorText(
+        err.message || (lang === 'en'
+          ? 'Failed to submit admission enquiry. Please try again.'
+          : 'விசாரணையைச் சமர்ப்பிக்க முடியவில்லை. மீண்டும் முயற்சிக்கவும்.')
+      );
     }
   };
 
@@ -196,28 +195,13 @@ export default function DirectLeadForm({ lang }: DirectLeadFormProps) {
                     <div className="h-16 w-16 bg-green-50 text-green-600 rounded-full flex items-center justify-center mx-auto shadow-sm">
                       <CheckCircle className="w-10 h-10" />
                     </div>
-                    <div className="space-y-2">
-                      <h3 className="font-heading text-xl font-bold text-navy-950">
-                        {lang === 'en' ? 'Admission Enquiry Submitted' : 'சேர்க்கை விவரங்கள் சமர்ப்பிக்கப்பட்டது'}
+                    <div className="space-y-3">
+                      <h3 className="font-heading text-xl sm:text-2xl font-bold text-navy-950">
+                        Thank you! Your admission enquiry has been submitted successfully.
                       </h3>
-                      <p className="font-sans text-sm text-slate-600 max-w-sm mx-auto leading-relaxed">
-                        {lang === 'en' 
-                          ? 'Thank you. Our admissions counsellor will contact you shortly.' 
-                          : 'நன்றி. எங்களது சேர்க்கை ஆலோசகர் உங்களை விரைவில் தொடர்புகொள்வார்.'}
+                      <p className="font-sans text-sm sm:text-base text-slate-600 max-w-sm mx-auto leading-relaxed font-medium">
+                        Our admissions team will contact you shortly.
                       </p>
-                    </div>
-
-                    <div className="bg-slate-50 border border-slate-100 p-4 rounded-xl text-xs text-slate-500 leading-snug space-y-2.5">
-                      <p>{lang === 'en' ? 'Connecting secure gateway on WhatsApp in 1.5 seconds...' : 'வாட்ஸ்அப் உடன் பாதுகாப்பாக இணைக்கப்படுகிறது (1.5 நொடிகளில்)...'}</p>
-                      <div className="h-1 w-24 bg-green-500 mx-auto rounded-full animate-pulse" />
-                      <a 
-                        href={directWhatsappUrl}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="inline-flex items-center gap-1.5 text-green-700 hover:text-green-800 font-bold underline"
-                      >
-                        {lang === 'en' ? 'Click here to connect immediately' : 'உடனே வாட்ஸ்அப் தொடர்பிற்கு இங்கே கிளிக் செய்யவும்'} <ArrowRight className="w-3.5 h-3.5" />
-                      </a>
                     </div>
                   </div>
                 ) : (
@@ -233,8 +217,9 @@ export default function DirectLeadForm({ lang }: DirectLeadFormProps) {
                     </div>
 
                     {errorText && (
-                      <div className="p-3 bg-rose-50 border border-rose-100 text-xs text-[#9c1e22] rounded-lg font-semibold">
-                        {errorText}
+                      <div className="p-3 bg-rose-50 border border-rose-200 text-xs sm:text-sm text-[#9c1e22] rounded-xl font-semibold flex items-center gap-2">
+                        <AlertCircle className="w-4 h-4 shrink-0" />
+                        <span>{errorText}</span>
                       </div>
                     )}
 
@@ -345,17 +330,17 @@ export default function DirectLeadForm({ lang }: DirectLeadFormProps) {
                     <button
                       type="submit"
                       disabled={isSubmitting}
-                      className="w-full bg-[#9c1e22] hover:bg-navy-950 text-white hover:text-gold-400 font-heading text-sm font-bold py-3 px-4 rounded-xl transition-all shadow-md cursor-pointer flex items-center justify-center gap-2 border border-transparent hover:border-gold-500 whitespace-nowrap active:scale-[0.99]"
+                      className="w-full bg-[#9c1e22] hover:bg-navy-950 disabled:bg-gray-400 disabled:cursor-not-allowed text-white hover:text-gold-400 font-heading text-sm font-bold py-3 px-4 rounded-xl transition-all shadow-md cursor-pointer flex items-center justify-center gap-2 border border-transparent hover:border-gold-500 whitespace-nowrap active:scale-[0.99]"
                       id="campaign-submit-btn"
                     >
                       {isSubmitting ? (
                         <>
                           <div className="h-4 w-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
-                          <span>{lang === 'en' ? 'Registering...' : 'பதிவு செய்யப்படுகிறது...'}</span>
+                          <span>{lang === 'en' ? 'Submitting Enquiry...' : 'பதிவு செய்யப்படுகிறது...'}</span>
                         </>
                       ) : (
                         <>
-                          <span>{lang === 'en' ? 'Submit Enquiry & Chat on WhatsApp' : 'விசாரணையைச் சமர்ப்பித்து வாட்ஸ்அப் செய்யவும்'}</span>
+                          <span>{lang === 'en' ? 'Submit Admission Enquiry' : 'சேர்க்கை விசாரணையை சமர்ப்பிக்கவும்'}</span>
                           <ArrowRight className="w-4 h-4" />
                         </>
                       )}

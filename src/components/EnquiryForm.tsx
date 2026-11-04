@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { User, Phone, Mail, Award, Calendar, Clock, Map, CheckCircle2, Ticket, ChevronRight, ChevronLeft, ShieldCheck } from 'lucide-react';
+import { User, Phone, Mail, Award, Calendar, Clock, Map, CheckCircle2, Ticket, ChevronRight, ChevronLeft, ShieldCheck, AlertCircle } from 'lucide-react';
 import { EnquiryLead } from '../types';
 import { trackAdmissionsLead } from './AnalyticsAndMetaPixel';
 import { TRANSLATIONS } from '../translations';
@@ -28,6 +28,7 @@ export default function EnquiryForm({ prefilledGrade, lang }: EnquiryFormProps) 
 
   const [ticketData, setTicketData] = useState<EnquiryLead | null>(null);
   const [isLoading, setIsLoading] = useState(false);
+  const [formError, setFormError] = useState('');
 
   // Sync pre-filled grade from calculator
   useEffect(() => {
@@ -47,17 +48,66 @@ export default function EnquiryForm({ prefilledGrade, lang }: EnquiryFormProps) 
     setFormData(prev => ({ ...prev, [name]: value }));
   };
 
-  const handleNextStep = (e: React.FormEvent) => {
+  const handleStep1Submit = (e: React.FormEvent) => {
     e.preventDefault();
-    setStep(prev => prev + 1);
+    setFormError('');
+
+    if (!formData.parentName.trim() || formData.parentName.trim().length < 2) {
+      setFormError(lang === 'en' ? 'Please enter a valid parent/guardian full name.' : 'பெற்றோர் முழுப்பெயரை சரியாக உள்ளிடவும்.');
+      return;
+    }
+
+    const cleanPhone = formData.phone.replace(/\s+/g, '').replace(/[-+()]/g, '');
+    if (cleanPhone.length < 10) {
+      setFormError(lang === 'en' ? 'Please enter a valid 10-digit mobile number.' : 'சரியான 10 இலக்க கைபேசி எண்ணை உள்ளிடவும்.');
+      return;
+    }
+
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!formData.email.trim() || !emailRegex.test(formData.email.trim())) {
+      setFormError(lang === 'en' ? 'Please enter a valid email address.' : 'சரியான மின்னஞ்சல் முகவரியை உள்ளிடவும்.');
+      return;
+    }
+
+    setStep(2);
+  };
+
+  const handleStep2Submit = (e: React.FormEvent) => {
+    e.preventDefault();
+    setFormError('');
+
+    if (!formData.childName.trim() || formData.childName.trim().length < 2) {
+      setFormError(lang === 'en' ? 'Please enter child full name.' : 'குழந்தையின் முழுப்பெயரை உள்ளிடவும்.');
+      return;
+    }
+
+    if (!formData.childDob) {
+      setFormError(lang === 'en' ? 'Please select child date of birth.' : 'குழந்தையின் பிறந்த தேதியைத் தேர்ந்தெடுக்கவும்.');
+      return;
+    }
+
+    if (!formData.gradeApplied) {
+      setFormError(lang === 'en' ? 'Please select the grade applied for.' : 'விண்ணப்பிக்கும் வகுப்பைத் தேர்ந்தெடுக்கவும்.');
+      return;
+    }
+
+    setStep(3);
   };
 
   const handlePrevStep = () => {
+    setFormError('');
     setStep(prev => prev - 1);
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    setFormError('');
+
+    if (!formData.preferredTourDate) {
+      setFormError(lang === 'en' ? 'Please select a preferred walkthrough date.' : 'சுற்றுப்பயண தேதியைத் தேர்ந்தெடுக்கவும்.');
+      return;
+    }
+
     setIsLoading(true);
 
     const mockupId = 'AV' + Date.now().toString().slice(-6).toUpperCase();
@@ -69,12 +119,34 @@ export default function EnquiryForm({ prefilledGrade, lang }: EnquiryFormProps) 
     };
 
     try {
-      // Post to our server endpoint so the backend records the telemetry
-      await fetch('/api/admissions/enquiry', {
+      // Direct Web3Forms submission to https://api.web3forms.com/submit
+      const formPayload = new FormData();
+      formPayload.append('access_key', 'f713c1bc-4523-4c3d-8050-a648ac2945f6');
+      formPayload.append('from_name', 'Akshara Admissions');
+      formPayload.append('subject', `New Admission Enquiry - ${formData.childName || formData.parentName} (${formData.gradeApplied})`);
+      formPayload.append('Parent Name', formData.parentName);
+      formPayload.append('Phone Number', formData.phone);
+      formPayload.append('Email Address', formData.email);
+      formPayload.append('Child Name', formData.childName);
+      formPayload.append('Child Date of Birth', formData.childDob);
+      formPayload.append('Academic Year', formData.academicYear);
+      formPayload.append('Grade Applied For', formData.gradeApplied);
+      formPayload.append('Tour Format', formData.tourMode === 'physical' ? 'Physical Campus Tour' : 'Virtual Consultation');
+      formPayload.append('Preferred Booking Date', formData.preferredTourDate);
+      formPayload.append('Time Window', formData.preferredTourSlot === 'morning' ? 'Morning Session (9:30 AM - 12:00 PM)' : 'Afternoon Session (2:00 PM - 4:30 PM)');
+      formPayload.append('Specific Requests / Comments', formData.additionalComments || 'None');
+      formPayload.append('Enquiry Ticket ID', mockupId);
+
+      const response = await fetch('https://api.web3forms.com/submit', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(newLead)
+        body: formPayload
       });
+
+      const resData = await response.json();
+
+      if (!resData.success) {
+        throw new Error(resData.message || 'Submission failed');
+      }
 
       // Save to client local state storage for Admin dashboard
       const stored = localStorage.getItem('akshara_enquiry_leads');
@@ -88,27 +160,23 @@ export default function EnquiryForm({ prefilledGrade, lang }: EnquiryFormProps) 
         mode: formData.tourMode
       });
 
-      setTimeout(() => {
-        setIsLoading(false);
-        setTicketData(newLead);
-        setStep(4);
-      }, 1200);
-
-    } catch (err) {
-      console.error("Failed to post enquiry", err);
       setIsLoading(false);
-      // Fallback save locally anyway
-      const stored = localStorage.getItem('akshara_enquiry_leads');
-      const leadsList = stored ? JSON.parse(stored) : [];
-      leadsList.unshift(newLead);
-      localStorage.setItem('akshara_enquiry_leads', JSON.stringify(leadsList));
       setTicketData(newLead);
       setStep(4);
+    } catch (err: any) {
+      console.error('Failed to submit enquiry to Web3Forms', err);
+      setIsLoading(false);
+      setFormError(
+        err.message || (lang === 'en'
+          ? 'Failed to submit admission enquiry. Please try again.'
+          : 'விண்ணப்பத்தைச் சமர்ப்பிக்க முடியவில்லை. மீண்டும் முயற்சிக்கவும்.')
+      );
     }
   };
 
   const handleResetForm = () => {
     setStep(1);
+    setFormError('');
     setFormData({
       parentName: '',
       email: '',
@@ -169,7 +237,7 @@ export default function EnquiryForm({ prefilledGrade, lang }: EnquiryFormProps) 
           {/* Actual Form Body */}
           <div className="p-6 sm:p-10">
             {step === 1 && (
-              <form onSubmit={handleNextStep} className="space-y-6">
+              <form onSubmit={handleStep1Submit} className="space-y-6">
                 <div className="border-b border-gray-100 pb-4">
                   <h3 className="font-heading text-lg font-bold text-navy-900 flex items-center gap-2">
                     <User className="w-5 h-5 text-gold-600" /> {lang === 'en' ? 'Parent Information' : 'பெற்றோர் தகவல்கள்'}
@@ -181,10 +249,17 @@ export default function EnquiryForm({ prefilledGrade, lang }: EnquiryFormProps) 
                   </p>
                 </div>
 
+                {formError && (
+                  <div className="p-3 bg-rose-50 border border-rose-100 text-xs sm:text-sm text-[#9c1e22] rounded-xl font-semibold flex items-center gap-2">
+                    <AlertCircle className="w-4 h-4 shrink-0" />
+                    <span>{formError}</span>
+                  </div>
+                )}
+
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
                   <div className="space-y-1.5">
                     <label className="block text-xs font-bold text-gray-700 uppercase tracking-wider">
-                      {lang === 'en' ? 'Parent Full Name:' : 'பெற்றோர் / பாதுகாவலர் முழுப்பெயர்:'}
+                      {lang === 'en' ? 'Parent Full Name:' : 'பெற்றோர் / பாதுகாவலர் முழுப்பெயர்:'} <span className="text-[#9c1e22]">*</span>
                     </label>
                     <div className="relative">
                       <User className="absolute left-3 top-3.5 h-4 w-4 text-gray-400" />
@@ -202,7 +277,7 @@ export default function EnquiryForm({ prefilledGrade, lang }: EnquiryFormProps) 
 
                   <div className="space-y-1.5">
                     <label className="block text-xs font-bold text-gray-700 uppercase tracking-wider">
-                      {lang === 'en' ? 'Active Phone Number:' : 'கைபேசி எண் (Active Phone Number):'}
+                      {lang === 'en' ? 'Active Phone Number:' : 'கைபேசி எண் (Active Phone Number):'} <span className="text-[#9c1e22]">*</span>
                     </label>
                     <div className="relative">
                       <Phone className="absolute left-3 top-3.5 h-4 w-4 text-gray-400" />
@@ -220,7 +295,7 @@ export default function EnquiryForm({ prefilledGrade, lang }: EnquiryFormProps) 
 
                   <div className="space-y-1.5 md:col-span-2">
                     <label className="block text-xs font-bold text-gray-700 uppercase tracking-wider">
-                      {lang === 'en' ? 'Email Address:' : 'மின்னஞ்சல் முகவரி (Email Address):'}
+                      {lang === 'en' ? 'Email Address:' : 'மின்னஞ்சல் முகவரி (Email Address):'} <span className="text-[#9c1e22]">*</span>
                     </label>
                     <div className="relative">
                       <Mail className="absolute left-3 top-3.5 h-4 w-4 text-gray-400" />
@@ -250,7 +325,7 @@ export default function EnquiryForm({ prefilledGrade, lang }: EnquiryFormProps) 
             )}
 
             {step === 2 && (
-              <form onSubmit={handleNextStep} className="space-y-6">
+              <form onSubmit={handleStep2Submit} className="space-y-6">
                 <div className="border-b border-gray-100 pb-4">
                   <h3 className="font-heading text-lg font-bold text-navy-900 flex items-center gap-2">
                     <Award className="w-5 h-5 text-gold-600" /> Admission Parameters
@@ -258,9 +333,18 @@ export default function EnquiryForm({ prefilledGrade, lang }: EnquiryFormProps) 
                   <p className="text-xs text-gray-500 mt-1">Specify academic pathways and candidate dates.</p>
                 </div>
 
+                {formError && (
+                  <div className="p-3 bg-rose-50 border border-rose-100 text-xs sm:text-sm text-[#9c1e22] rounded-xl font-semibold flex items-center gap-2">
+                    <AlertCircle className="w-4 h-4 shrink-0" />
+                    <span>{formError}</span>
+                  </div>
+                )}
+
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
                   <div className="space-y-1.5 md:col-span-2">
-                    <label className="block text-xs font-bold text-gray-700 uppercase tracking-wider">Child Full Name:</label>
+                    <label className="block text-xs font-bold text-gray-700 uppercase tracking-wider">
+                      Child Full Name: <span className="text-[#9c1e22]">*</span>
+                    </label>
                     <input
                       type="text"
                       name="childName"
@@ -273,7 +357,9 @@ export default function EnquiryForm({ prefilledGrade, lang }: EnquiryFormProps) 
                   </div>
 
                   <div className="space-y-1.5">
-                    <label className="block text-xs font-bold text-gray-700 uppercase tracking-wider">Child Date of Birth:</label>
+                    <label className="block text-xs font-bold text-gray-700 uppercase tracking-wider">
+                      Child Date of Birth: <span className="text-[#9c1e22]">*</span>
+                    </label>
                     <input
                       type="date"
                       name="childDob"
@@ -285,7 +371,9 @@ export default function EnquiryForm({ prefilledGrade, lang }: EnquiryFormProps) 
                   </div>
 
                   <div className="space-y-1.5">
-                    <label className="block text-xs font-bold text-gray-700 uppercase tracking-wider">Academic Year Applied:</label>
+                    <label className="block text-xs font-bold text-gray-700 uppercase tracking-wider">
+                      Academic Year Applied: <span className="text-[#9c1e22]">*</span>
+                    </label>
                     <select
                       name="academicYear"
                       value={formData.academicYear}
@@ -298,7 +386,9 @@ export default function EnquiryForm({ prefilledGrade, lang }: EnquiryFormProps) 
                   </div>
 
                   <div className="space-y-1.5 md:col-span-2">
-                    <label className="block text-xs font-bold text-gray-700 uppercase tracking-wider">Grade Applied For:</label>
+                    <label className="block text-xs font-bold text-gray-700 uppercase tracking-wider">
+                      Grade Applied For: <span className="text-[#9c1e22]">*</span>
+                    </label>
                     <select
                       name="gradeApplied"
                       required
@@ -348,6 +438,13 @@ export default function EnquiryForm({ prefilledGrade, lang }: EnquiryFormProps) 
                   <p className="text-xs text-gray-500 mt-1">Book physical slots or request online consultancy.</p>
                 </div>
 
+                {formError && (
+                  <div className="p-3 bg-rose-50 border border-rose-100 text-xs sm:text-sm text-[#9c1e22] rounded-xl font-semibold flex items-center gap-2">
+                    <AlertCircle className="w-4 h-4 shrink-0" />
+                    <span>{formError}</span>
+                  </div>
+                )}
+
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
                   <div className="space-y-3 md:col-span-2">
                     <label className="block text-xs font-bold text-gray-700 uppercase tracking-wider">Tour / Consultation Format:</label>
@@ -385,7 +482,9 @@ export default function EnquiryForm({ prefilledGrade, lang }: EnquiryFormProps) 
                   </div>
 
                   <div className="space-y-1.5">
-                    <label className="block text-xs font-bold text-gray-700 uppercase tracking-wider">Preferred Booking Date:</label>
+                    <label className="block text-xs font-bold text-gray-700 uppercase tracking-wider">
+                      Preferred Booking Date: <span className="text-[#9c1e22]">*</span>
+                    </label>
                     <div className="relative">
                       <Calendar className="absolute left-3 top-3.5 h-4 w-4 text-gray-400" />
                       <input
@@ -429,15 +528,16 @@ export default function EnquiryForm({ prefilledGrade, lang }: EnquiryFormProps) 
                   </div>
                 </div>
 
-                <div className="pt-4 flex justify-between items-center bg-gray-50 p-4 rounded-xl border border-gray-150">
+                <div className="pt-4 flex flex-col sm:flex-row justify-between items-center gap-3 bg-gray-50 p-4 rounded-xl border border-gray-150">
                   <span className="flex items-center gap-1.5 text-xs text-navy-800 font-semibold font-mono uppercase">
-                    <ShieldCheck className="w-4 h-4 text-green-600" /> Guaranteed Security
+                    <ShieldCheck className="w-4 h-4 text-green-600" /> Web3Forms Secure Delivery
                   </span>
-                  <div className="flex gap-3">
+                  <div className="flex gap-3 w-full sm:w-auto justify-end">
                     <button
                       type="button"
                       onClick={handlePrevStep}
-                      className="border border-gray-300 text-gray-600 font-heading text-sm font-bold px-4 py-2.5 rounded-lg flex items-center gap-1 hover:bg-gray-50 cursor-pointer"
+                      disabled={isLoading}
+                      className="border border-gray-300 text-gray-600 font-heading text-sm font-bold px-4 py-2.5 rounded-lg flex items-center gap-1 hover:bg-gray-50 cursor-pointer disabled:opacity-50"
                     >
                       <ChevronLeft className="w-4 h-4" />
                       <span>Back</span>
@@ -445,16 +545,16 @@ export default function EnquiryForm({ prefilledGrade, lang }: EnquiryFormProps) 
                     <button
                       type="submit"
                       disabled={isLoading}
-                      className="bg-green-700 hover:bg-green-800 disabled:bg-green-600 text-white font-heading text-sm font-bold px-6 py-2.5 rounded-lg flex items-center gap-1.5 transition-colors cursor-pointer"
+                      className="bg-green-700 hover:bg-green-800 disabled:bg-gray-400 disabled:cursor-not-allowed text-white font-heading text-sm font-bold px-6 py-2.5 rounded-lg flex items-center gap-1.5 transition-colors cursor-pointer"
                     >
                       {isLoading ? (
                         <>
                           <div className="h-4 w-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
-                          <span>Submitting...</span>
+                          <span>Submitting Enquiry...</span>
                         </>
                       ) : (
                         <>
-                          <span>Submit Ticket</span>
+                          <span>Submit Admission Enquiry</span>
                           <CheckCircle2 className="w-4 h-4" />
                         </>
                       )}
@@ -467,13 +567,15 @@ export default function EnquiryForm({ prefilledGrade, lang }: EnquiryFormProps) 
             {/* Step 4: Success Dialogue Ticket */}
             {step === 4 && ticketData && (
               <div className="space-y-8 animate-fadeIn" id="success-ticket-layout">
-                <div className="text-center space-y-3">
-                  <div className="h-16 w-16 bg-green-50 text-green-600 rounded-full flex items-center justify-center mx-auto shadow-sm">
+                <div className="p-6 sm:p-8 bg-green-50 border border-green-200 rounded-2xl text-center space-y-3">
+                  <div className="h-16 w-16 bg-green-100 text-green-700 rounded-full flex items-center justify-center mx-auto shadow-xs">
                     <CheckCircle2 className="w-10 h-10" />
                   </div>
-                  <h3 className="font-heading text-2xl font-bold text-navy-900">Tour Booking Secured</h3>
-                  <p className="text-sm text-gray-500 max-w-md mx-auto">
-                    A personalized admissions ticket is generated on our servers. Our coordination officer will call you back within 1 hour.
+                  <h3 className="font-heading text-xl sm:text-2xl font-bold text-navy-950">
+                    Thank you! Your admission enquiry has been submitted successfully.
+                  </h3>
+                  <p className="text-sm sm:text-base text-navy-800 max-w-lg mx-auto font-medium">
+                    Our admissions team will contact you shortly.
                   </p>
                 </div>
 
